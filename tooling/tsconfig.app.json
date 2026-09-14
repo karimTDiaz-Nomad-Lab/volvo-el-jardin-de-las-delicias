@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "module": "ESNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "types": ["node"],
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["../src/*"],
+      "@config/*": ["../config/*"],
+      "@config": ["../config/index.ts"],
+      "@client-manifest": ["../config/clients/nomad/manifest.ts"]
+    },
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "strict": true
+  },
+  "include": [
+    "../src/**/*.ts",
+    "../src/**/*.tsx",
+    "../config/**/*.ts",
+    "../integrations/**/*.ts",
+    "../integrations/**/*.tsx",
+    "../server/**/*.ts",
+    "../src/vite-env.d.ts"
+  ],
+  "exclude": ["../node_modules", "../dist"]
+}

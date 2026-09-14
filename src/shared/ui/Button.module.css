@@ -1,0 +1,86 @@
+.base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-family: 'Volvo Centum', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 30px;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.base:focus-visible {
+  outline: 2px solid var(--vf-pill-stroke);
+  outline-offset: 3px;
+}
+
+.base:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.primary {
+  background-color: var(--vf-pill-fill, #24291d);
+  color: #fff;
+  border-color: var(--vf-pill-stroke, #a3863a);
+}
+
+.primary:hover:not(:disabled) {
+  background-color: rgb(var(--vf-accent-strong));
+}
+
+.primary:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.secondary {
+  background-color: var(--vf-pill-muted, #dad7d2);
+  color: var(--vf-ink, #1a1a16);
+  border-color: transparent;
+}
+
+.secondary:hover:not(:disabled) {
+  filter: brightness(0.96);
+}
+
+.glass {
+  background: var(--vf-pill-fill, #24291d);
+  color: #fff;
+  border-color: var(--vf-pill-stroke, #a3863a);
+}
+
+.glass:hover:not(:disabled) {
+  background-color: rgb(var(--vf-accent-strong));
+}
+
+.lg {
+  width: 100%;
+  min-height: clamp(3.6rem, 7.2cqw, 4.4rem);
+  font-size: var(--vf-fs-body);
+  padding: 0 1.5rem;
+}
+
+.md {
+  min-height: 3rem;
+  padding: 0 2rem;
+  font-size: var(--vf-fs-body);
+}
+
+.kiosk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: max(3.65rem, var(--vf-touch-target-min, 44px));
+  padding: 1.6rem;
+  font-size: var(--vf-fs-cta);
+  gap: 0.75rem;
+}

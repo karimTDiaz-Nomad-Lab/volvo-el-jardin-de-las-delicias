@@ -1,0 +1,26 @@
+.appRoot {
+  font-family: 'Volvo Centum', sans-serif;
+  color: var(--vf-ink, #1a1a16);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  background: var(--vf-pill-fill, #24291d);
+}
+
+.stage {
+  position: relative;
+  container-type: inline-size;
+  width: min(100vw, calc(100vh * 9 / 16));
+  height: min(100vh, calc(100vw * 16 / 9));
+  overflow: hidden;
+  background: rgb(var(--vf-bg-0));
+}
+
+.phase {
+  position: absolute;
+  inset: 0;
+}

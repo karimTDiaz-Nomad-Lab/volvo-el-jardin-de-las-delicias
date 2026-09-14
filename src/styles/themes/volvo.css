@@ -1,0 +1,54 @@
+/**
+ * Volvo — El jardín de las delicias
+ * Artboard tokens from journey_mupi (fill #24291d, gold #a3863a, sand #dad7d2).
+ */
+[data-theme='volvo'] {
+  --vf-bg-0: 36 41 29;
+  --vf-bg-1: 48 54 40;
+  --vf-surface-1: 36 41 29;
+  --vf-surface-2: 44 50 36;
+  --vf-rail: 36 41 29;
+  --vf-border-soft: 163 134 58;
+  --vf-border-strong: 163 134 58;
+  --vf-text-strong: 26 26 22;
+  --vf-text: 26 26 22;
+  --vf-text-muted: 255 255 255;
+  --vf-text-subtle: 218 215 210;
+  --vf-accent: 36 41 29;
+  --vf-accent-strong: 28 32 22;
+  --vf-accent-ink: 255 255 255;
+  --vf-danger: 196 110 96;
+  --vf-danger-bg: 62 40 36;
+  --vf-success: 110 148 108;
+  --vf-focus: 163 134 58;
+  --vf-overlay: 18 22 16;
+  --vf-surface-glow: none;
+  --vf-shadow-soft: 0 10px 28px rgba(12, 16, 10, 0.18);
+  --vf-shadow-premium: 0 14px 32px rgba(12, 16, 10, 0.22);
+  --vf-radius-sm: 1.15rem;
+  --vf-radius-md: 1.45rem;
+  --vf-radius-lg: 1.85rem;
+  --vf-motion-fast: 0.18s;
+  --vf-motion-base: 0.38s;
+  --vf-motion-slow: 0.58s;
+  --vf-motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --vf-pill-fill: #24291d;
+  --vf-pill-stroke: #a3863a;
+  --vf-pill-muted: #dad7d2;
+  --vf-ink: #1a1a16;
+  --vf-paper: #f4f0e6;
+  --font-volvo: 'Volvo Centum', sans-serif;
+  /*
+   * Type scale — on the 9:16 stage, cqw is ~4–6 (not 1–2).
+   * Raise the first rem to make copy larger; the middle cqw only wins if it sits between min and max.
+   */
+  --vf-fs-micro: clamp(0.9rem, 3.2cqw, 1.2rem);
+  --vf-fs-title: clamp(1.6rem, 5.4cqw, 2.15rem);
+  --vf-fs-title-sm: clamp(1.38rem, 4.8cqw, 1.9rem);
+  --vf-fs-body: clamp(1.28rem, 4.8cqw, 1.8rem);
+  --vf-fs-caption: clamp(0.95rem, 3.6cqw, 1.25rem);
+  --vf-fs-cta: clamp(1.2rem, 4.6cqw, 1.55rem);
+  /* Shared lift of CTAs from the bottom edge across the journey. */
+  --vf-footer-inset: max(3.5rem, calc(env(safe-area-inset-bottom) + 2.6rem));
+  --vf-cta-width: 75%;
+}

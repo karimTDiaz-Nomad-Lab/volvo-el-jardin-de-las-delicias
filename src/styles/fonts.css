@@ -1,0 +1,66 @@
+/**
+ * Volvo Centum — local files in public/fonts.
+ */
+@font-face {
+  font-family: 'Volvo Centum';
+  src: url('/fonts/VolvoCentum_Lt.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Volvo Centum';
+  src: url('/fonts/VolvoCentum_LtIt.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Volvo Centum';
+  src: url('/fonts/VolvoCentum_Rg.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Volvo Centum';
+  src: url('/fonts/VolvoCentum_It.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Volvo Centum';
+  src: url('/fonts/VolvoCentum_SBd.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Volvo Centum';
+  src: url('/fonts/VolvoCentum_SBdIt.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Volvo Centum';
+  src: url('/fonts/VolvoCentum_Bd.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Volvo Centum';
+  src: url('/fonts/VolvoCentum_BdIt.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}

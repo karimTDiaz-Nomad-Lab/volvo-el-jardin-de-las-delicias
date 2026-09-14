@@ -1,0 +1,41 @@
+name: virtual-try-on
+region: ams
+services:
+  - name: web
+    source_dir: /
+    environment_slug: node-js
+    build_command: npm ci --include=dev && npm run build
+    run_command: npm start
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    envs:
+      - key: NODE_ENV
+        value: production
+        scope: RUN_TIME
+      # Build-time (Vite bakes these into dist/)
+      - key: VITE_CLIENT_ID
+        value: volvo
+        scope: BUILD_TIME
+      - key: VITE_CAMERA_ROTATION_DEG
+        value: "0"
+        scope: BUILD_TIME
+      - key: VITE_KIOSK_API_KEY
+        type: SECRET
+        scope: BUILD_TIME
+      # Runtime — must match VITE_KIOSK_API_KEY; server refuses start without one of these in production
+      - key: API_KEY
+        type: SECRET
+        scope: RUN_TIME
+      # Optional comma-separated kiosk tokens (in addition to API_KEY)
+      # - key: KIOSK_TOKENS
+      #   type: SECRET
+      - key: GEMINI_API_KEY
+        type: SECRET
+        scope: RUN_TIME
+      - key: GEMINI_IMAGE_MODEL
+        value: gemini-3.1-flash-lite-image
+        scope: RUN_TIME
+      - key: GEMINI_IMAGE_SIZE
+        value: 1K
+        scope: RUN_TIME

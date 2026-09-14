@@ -1,0 +1,447 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.viewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.warmupOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.58) 42%,
+    rgba(0, 0, 0, 0.68) 100%
+  );
+}
+
+.warmupInner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.warmupSpinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.topBar {
+  position: absolute;
+  top: max(1rem, env(safe-area-inset-top));
+  left: max(1.25rem, env(safe-area-inset-left));
+  right: max(1.25rem, env(safe-area-inset-right));
+  z-index: 35;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.topBarSpacer {
+  width: 3rem;
+  height: 3rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  flex-shrink: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.captureHintText,
+.countdownHint {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(0.625rem, 0.72vmin, 0.75rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+.captureHintText {
+  align-self: stretch;
+  max-width: 100%;
+}
+
+.countdownHint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 29;
+  transform: translateY(calc(-50% + clamp(5.1rem, 10vmin, 6.25rem)));
+  pointer-events: none;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
+.controlsDock {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  pointer-events: none;
+  padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+}
+
+.controlsInner {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  width: min(100%, 24rem);
+  padding: 1.1rem 1.25rem;
+  /* Controls sit over the face — a soft scrim keeps them legible on any skin. */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0) 72%
+  );
+}
+
+.shutter {
+  width: clamp(6rem, 12vmin, 7rem);
+  height: clamp(6rem, 12vmin, 7rem);
+  min-width: 3.5rem;
+  min-height: 3.5rem;
+  border-radius: 9999px;
+  border: 3px solid var(--glass-ring);
+  padding: 0.25rem;
+  background: transparent;
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease);
+}
+
+.shutter:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.shutter:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.38);
+}
+
+.shutterInner {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--glass-bg-muted);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-inset-highlight);
+  transition:
+    background var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease);
+}
+
+.shutter:hover:not(:disabled) .shutterInner {
+  background: var(--glass-bg-strong);
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.shutter:active:not(:disabled) .shutterInner {
+  background: rgba(0, 0, 0, 0.52);
+}
+
+.shutter:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.errorPanel {
+  pointer-events: auto;
+  max-width: 28rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0 1.5rem;
+}
+
+.errorText {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+}
+
+.retryBtn {
+  min-height: 3rem;
+  min-width: 2.75rem;
+  padding: 0 1.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgb(var(--color-accent));
+  color: rgb(var(--color-accent-ink));
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background-color var(--motion-fast) var(--motion-ease);
+}
+
+.retryBtn:hover {
+  background-color: rgb(var(--color-accent-strong));
+}
+
+.closeBtn {
+  position: relative;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border-radius: 9999px;
+  background: var(--glass-bg-solid);
+  border: 1px solid var(--glass-border-strong);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(var(--glass-blur-xs));
+  -webkit-backdrop-filter: blur(var(--glass-blur-xs));
+  pointer-events: auto;
+}
+
+.previewDock {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  pointer-events: none;
+  padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+}
+
+.previewActions {
+  pointer-events: auto;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(0.75rem, 2vw, 1.15rem);
+  width: min(100%, 36rem);
+}
+
+.previewPill {
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.2vmin, 0.65rem);
+  min-height: clamp(3.5rem, 5.5vmin, 3.75rem);
+  min-width: min(44%, 12rem);
+  padding: 0 clamp(1.15rem, 2.4vmin, 1.65rem);
+  border-radius: 9999px;
+  font-size: clamp(0.98rem, 1.2vmin, 1.12rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    background var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease);
+}
+
+.previewPill:active {
+  transform: scale(0.985);
+}
+
+.previewPillSecondary {
+  color: rgba(255, 255, 255, 0.94);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-inset-highlight), var(--shadow-premium);
+}
+
+.previewPillSecondary:hover {
+  background: var(--glass-bg-strong);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #fff;
+}
+
+.previewPillPrimary {
+  color: rgb(var(--color-accent-ink));
+  background: rgb(var(--color-accent));
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-premium);
+}
+
+.previewPillPrimary:hover {
+  background: rgb(var(--color-accent-strong));
+}
+
+.previewPillIcon {
+  width: clamp(1.1rem, 1.45vmin, 1.28rem);
+  height: clamp(1.1rem, 1.45vmin, 1.28rem);
+  flex-shrink: 0;
+}
+
+.countdownOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 28;
+  background: rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+.countdownBubble {
+  position: absolute;
+  inset: 0;
+  z-index: 29;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.countdownInner {
+  width: 8rem;
+  height: 8rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-premium);
+  color: white;
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  font-weight: 700;
+}
+
+.timerRail {
+  border-radius: 9999px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  padding: 0.45rem 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timerBtn {
+  min-height: clamp(3.5rem, 4.2vmin, 3.5rem);
+  min-width: clamp(3.5rem, 4.2vmin, 3.5rem);
+  padding: 0 clamp(0.75rem, 1.2vmin, 1rem);
+  border-radius: 9999px;
+  font-size: clamp(0.95rem, 1.15vmin, 1.1rem);
+  font-weight: 600;
+  transition: background-color var(--motion-fast) var(--motion-ease);
+}
+
+.timerBtnActive {
+  background: white;
+  color: black;
+}
+
+.timerBtnIdle {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.timerBtnIdle:hover {
+  color: white;
+}
+
+/* MUPI — hint, timer, preview touch targets */
+:global([data-display='mupi']) .hintBar {
+  max-width: min(100%, 36rem);
+  white-space: nowrap;
+}
+
+@media (orientation: portrait) and (min-height: 1000px) {
+  :global([data-display='mupi']) .hintBar {
+    max-width: min(100%, 44rem);
+  }
+}
+
+@media (orientation: portrait) and (min-height: 1800px),
+  (min-width: 2000px) {
+  :global([data-display='mupi']) .hintBar {
+    max-width: min(100%, 52rem);
+  }
+
+  :global([data-display='mupi']) .timerBtn {
+    min-height: clamp(3.5rem, 5vmin, 4.15rem);
+    min-width: clamp(3.25rem, 5vmin, 4.15rem);
+    padding: 0 clamp(0.9rem, 1.5vmin, 1.15rem);
+  }
+}
+
+@media (orientation: portrait) and (min-height: 1000px) {
+  :global([data-display='mupi']) .timerBtn {
+    min-height: clamp(3.25rem, 4.6vmin, 3.85rem);
+    min-width: clamp(3rem, 4.6vmin, 3.85rem);
+  }
+}
+
+:global([data-display='mupi']) .previewPill {
+  min-height: max(3.5rem, var(--touch-target, 3.5rem));
+  font-size: clamp(1rem, 1.28vmin, 1.18rem);
+  padding: 0 clamp(1.25rem, 2.25vmin, 1.85rem);
+}
+
+:global([data-display='mupi']) .previewActions {
+  width: min(100%, 40rem);
+  gap: clamp(0.85rem, 1.5vmin, 1.25rem);
+}
+
+@media (orientation: portrait) and (min-height: 1800px),
+  (min-width: 2000px) {
+  :global([data-display='mupi']) .previewPill {
+    min-height: max(3.75rem, var(--touch-target, 3.85rem));
+    font-size: clamp(1.05rem, 1.35vmin, 1.22rem);
+  }
+
+  :global([data-display='mupi']) .previewPillIcon {
+    width: clamp(1.2rem, 1.55vmin, 1.38rem);
+    height: clamp(1.2rem, 1.55vmin, 1.38rem);
+  }
+
+  :global([data-display='mupi']) .previewActions {
+    width: min(100%, 44rem);
+  }
+}

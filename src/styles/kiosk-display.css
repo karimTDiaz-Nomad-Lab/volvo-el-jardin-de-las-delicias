@@ -1,0 +1,141 @@
+/**
+ * MUPI display mode — scale up only on tall portrait screens (real kiosk).
+ * Laptop / landscape keeps base typography from primitives.css.
+ */
+
+/* ~81% browser zoom (3× Cmd− from 100%): rem/em via root font-size; vmin/vw/vh via --vf-ui-scale */
+html[data-display='mupi'] {
+  --vf-ui-scale: 0.81;
+  font-size: 81%;
+}
+
+/* Primary CTAs — keep ≥44px physical hit area after root scale */
+html[data-display='mupi'] .capture-shutter {
+  min-width: max(3.5rem, var(--vf-touch-target-min));
+  min-height: max(3.5rem, var(--vf-touch-target-min));
+}
+
+html[data-display='mupi'] .landingHero .cta {
+  min-height: max(
+    clamp(3.5rem, calc(5.2vmin * var(--vf-ui-scale)), 4.25rem),
+    var(--vf-touch-target-min)
+  );
+}
+
+html[data-display='mupi'] .kiosk {
+  min-height: max(var(--touch-target, 4rem), var(--vf-touch-target-min));
+}
+
+@media (orientation: portrait) and (min-height: 1000px) {
+  [data-display='mupi'] {
+    --fs-label: clamp(0.98rem, calc(1.2vmin * var(--vf-ui-scale)), 1.15rem);
+    --fs-body: clamp(1.08rem, calc(1.45vmin * var(--vf-ui-scale)), 1.3rem);
+    --fs-title-sm: clamp(1.55rem, calc(2.4vmin * var(--vf-ui-scale)), 2.1rem);
+    --fs-title: clamp(2.15rem, calc(4.5vmin * var(--vf-ui-scale)), 3.45rem);
+    --fs-hero: clamp(3.6rem, calc(8.5vmin * var(--vf-ui-scale)), 6.85rem);
+    --touch-target: clamp(3.65rem, calc(6vmin * var(--vf-ui-scale)), 4.65rem);
+    --kiosk-pad-x: clamp(2rem, calc(4vw * var(--vf-ui-scale)), 4rem);
+    --kiosk-pad-y: clamp(2rem, calc(3vh * var(--vf-ui-scale)), 3.5rem);
+  }
+}
+
+@media (orientation: portrait) and (min-height: 1800px),
+  (min-width: 2000px) {
+  [data-display='mupi'] {
+    --fs-label: clamp(1.1rem, calc(1.35vmin * var(--vf-ui-scale)), 1.28rem);
+    --fs-body: clamp(1.22rem, calc(1.65vmin * var(--vf-ui-scale)), 1.48rem);
+    --fs-title-sm: clamp(1.75rem, calc(2.75vmin * var(--vf-ui-scale)), 2.4rem);
+    --fs-title: clamp(2.45rem, calc(5.2vmin * var(--vf-ui-scale)), 3.95rem);
+    --fs-hero: clamp(4.1rem, calc(9.8vmin * var(--vf-ui-scale)), 7.85rem);
+    --touch-target: clamp(3.85rem, calc(6.5vmin * var(--vf-ui-scale)), 5rem);
+    --kiosk-pad-x: clamp(2.25rem, calc(4.5vw * var(--vf-ui-scale)), 4.5rem);
+    --kiosk-pad-y: clamp(2.25rem, calc(3.5vh * var(--vf-ui-scale)), 4rem);
+  }
+
+  html[data-display='mupi'] .landingHero .cta {
+    min-height: max(
+      clamp(3.75rem, calc(5.8vmin * var(--vf-ui-scale)), 4.65rem),
+      var(--vf-touch-target-min)
+    );
+  }
+}
+
+[data-display='mupi'] .capture-hint {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  text-align: center;
+  font-size: clamp(0.82rem, calc(0.95vmin * var(--vf-ui-scale)), 0.92rem);
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+[data-display='mupi'] .capture-timer-btn {
+  font-size: clamp(1.14rem, calc(1.4vmin * var(--vf-ui-scale)), 1.32rem);
+  min-height: max(var(--touch-target, 3.5rem), var(--vf-touch-target-min));
+  min-width: max(var(--touch-target, 3.5rem), var(--vf-touch-target-min));
+  padding: 0 clamp(0.9rem, calc(1.45vmin * var(--vf-ui-scale)), 1.2rem);
+}
+
+@media (orientation: portrait) and (min-height: 1000px) {
+  [data-display='mupi'] .capture-hint {
+    font-size: clamp(0.88rem, calc(1vmin * var(--vf-ui-scale)), 0.98rem);
+  }
+
+  [data-display='mupi'] .capture-timer-btn {
+    font-size: clamp(1.22rem, calc(1.5vmin * var(--vf-ui-scale)), 1.42rem);
+  }
+
+  [data-display='mupi'] .capture-shutter {
+    width: clamp(6.5rem, calc(14vmin * var(--vf-ui-scale)), 8rem);
+    height: clamp(6.5rem, calc(14vmin * var(--vf-ui-scale)), 8rem);
+  }
+
+  [data-display='mupi'] .capture-close,
+  [data-display='mupi'] .topBarSpacer {
+    width: var(--touch-target, 3.5rem);
+    min-width: var(--touch-target, 3.5rem);
+    height: var(--touch-target, 3.5rem);
+    min-height: var(--touch-target, 3.5rem);
+  }
+}
+
+@media (orientation: portrait) and (min-height: 1800px),
+  (min-width: 2000px) {
+  [data-display='mupi'] .capture-hint {
+    font-size: clamp(0.94rem, calc(1.08vmin * var(--vf-ui-scale)), 1.02rem);
+    padding: 0;
+  }
+
+  [data-display='mupi'] .capture-timer-btn {
+    font-size: clamp(1.3rem, calc(1.65vmin * var(--vf-ui-scale)), 1.5rem);
+  }
+
+  [data-display='mupi'] .capture-shutter {
+    width: clamp(6rem, calc(12vmin * var(--vf-ui-scale)), 7rem);
+    height: clamp(6rem, calc(12vmin * var(--vf-ui-scale)), 7rem);
+  }
+
+  [data-display='mupi'] .capture-preview-retake,
+  [data-display='mupi'] .capture-preview-confirm {
+    min-height: max(var(--touch-target, 3.85rem), var(--vf-touch-target-min));
+    font-size: clamp(1.05rem, calc(1.35vmin * var(--vf-ui-scale)), 1.22rem);
+    padding: 0 clamp(1.35rem, calc(2.25vmin * var(--vf-ui-scale)), 1.85rem);
+  }
+
+  /* Generating mirror — 4K / tall portrait (left editorial block) */
+  [data-display='mupi'] .generating-content {
+    --vf-gen-gap: clamp(1.15rem, calc(2.4vh * var(--vf-ui-scale)), 1.85rem);
+    --vf-gen-block-max: min(100%, 40rem);
+    --vf-gen-title: clamp(3.5rem, calc(7.5vmin * var(--vf-ui-scale)), 5.5rem);
+    --vf-gen-eyebrow: clamp(0.88rem, calc(1.25vmin * var(--vf-ui-scale)), 1.05rem);
+    --vf-gen-subtitle: clamp(1.28rem, calc(2.1vmin * var(--vf-ui-scale)), 1.65rem);
+    --vf-gen-status-fs: clamp(1.12rem, calc(1.75vmin * var(--vf-ui-scale)), 1.38rem);
+    --vf-gen-spinner: clamp(2.85rem, calc(5.5vmin * var(--vf-ui-scale)), 3.5rem);
+  }
+
+  [data-display='mupi'] .generating-title {
+    max-width: none;
+    line-height: 0.94;
+  }
+}

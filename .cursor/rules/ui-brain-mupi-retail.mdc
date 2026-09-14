@@ -1,0 +1,33 @@
+---
+description: UI brain guidance with MUPI retail constraints for virtualFit
+globs: **/*.{tsx,css}
+alwaysApply: false
+---
+
+# UI Brain + MUPI Retail (virtualFit)
+
+Use strong UI-system judgment (component hierarchy, spacing rhythm, visual consistency), but always prioritize the kiosk context below over generic web patterns.
+
+## MUPI constraints (required)
+- Target is portrait 55in MUPI, touch-first, viewing distance 1-2m.
+- Keep one clear primary action per screen.
+- Minimum touch target: 44px absolute minimum, prefer 56-72px on primary controls.
+- Avoid desktop-like dense sidebars and tiny labels.
+- Keep camera overlays outside critical face/framing zones.
+- Do not introduce "desktop vs mupi" switchers in customer-facing UI.
+
+## Studio rail rules
+- Preserve readable rail width; avoid ultra-narrow panels that truncate core copy.
+- Keep section typography compact and legible in rail context.
+- Product tiles must remain scannable: stable image ratio, readable label (2 lines max), clear selected state.
+- Category chips must fit cleanly on one row when possible and stay tappable.
+
+## Visual quality rules
+- Prefer calm, premium layout over noisy effects.
+- Avoid overlapping floating elements that block primary content.
+- Keep spacing and alignment mathematically consistent across sections.
+- Reduce cognitive load: fewer competing CTAs, clearer hierarchy.
+
+## Implementation habits
+- Validate changes with actual MUPI-like viewport proportions before finalizing.
+- If a visual change degrades readability or alignment, revert quickly and iterate with smaller deltas.

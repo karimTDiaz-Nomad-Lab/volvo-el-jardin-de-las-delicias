@@ -1,0 +1,66 @@
+/**
+ * Semantic tokens — UI modules and shared patterns reference these.
+ */
+:root,
+[data-theme='default'],
+[data-theme='volvo'] {
+  --color-bg: var(--vf-bg-0);
+  --color-bg-elevated: var(--vf-bg-1);
+  --color-surface: var(--vf-surface-1);
+  --color-surface-muted: var(--vf-surface-2);
+  --color-rail: var(--vf-rail);
+  --color-border: var(--vf-border-soft);
+  --color-border-accent: var(--vf-border-strong);
+  --text-primary: var(--vf-text-strong);
+  --text-body: var(--vf-text);
+  --text-muted: var(--vf-text-muted);
+  --text-subtle: var(--vf-text-subtle);
+  --color-accent: var(--vf-accent);
+  --color-accent-strong: var(--vf-accent-strong);
+  --color-accent-ink: var(--vf-accent-ink);
+  --color-danger: var(--vf-danger);
+  --color-danger-bg: var(--vf-danger-bg);
+  --color-success: var(--vf-success);
+  --color-focus: var(--vf-focus);
+  --color-overlay: var(--vf-overlay);
+  --shadow-soft: var(--vf-shadow-soft);
+  --shadow-premium: var(--vf-shadow-premium);
+  --radius-sm: var(--vf-radius-sm);
+  --radius-md: var(--vf-radius-md);
+  --radius-lg: var(--vf-radius-lg);
+  --motion-fast: var(--vf-motion-fast);
+  --motion-base: var(--vf-motion-base);
+  --motion-slow: var(--vf-motion-slow);
+  --motion-ease: var(--vf-motion-ease);
+  /* Black glass — capture chrome + landing CTA (future: wardrobe rail / menu) */
+  --glass-bg: rgba(0, 0, 0, 0.35);
+  --glass-bg-muted: rgba(0, 0, 0, 0.42);
+  --glass-bg-strong: rgba(0, 0, 0, 0.48);
+  --glass-bg-solid: rgba(0, 0, 0, 0.5);
+  --glass-blur: 16px;
+  --glass-blur-sm: 12px;
+  --glass-blur-xs: 10px;
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-border-subtle: rgba(255, 255, 255, 0.14);
+  --glass-border-strong: rgba(255, 255, 255, 0.22);
+  --glass-ring: rgba(255, 255, 255, 0.28);
+  --glass-inset-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* Landing / generating hero + on-dark footer — :root only so KioskShell data-theme does not shadow MUPI overrides on <html> */
+:root {
+  /* 1 = desktop dev; html[data-display='mupi'] sets 0.81 in kiosk-display.css */
+  --vf-ui-scale: 1;
+  /* Physical floor for primary kiosk CTAs (px so it does not shrink with root font-size) */
+  --vf-touch-target-min: 44px;
+  --vf-landing-inset-x: clamp(3.375rem, 8.265vw, 5.262rem);
+  --vf-landing-inset-top: clamp(2rem, 5.25vh, 3.375rem);
+  /* Bottom editorial row — footer copy + issue line share this inset inside h-16 footer band */
+  --vf-landing-inset-bottom: clamp(2rem, 4.75vh, 3rem);
+  /* Right edge for on-dark footer copy + vertical “Mirror session” rail */
+  --vf-landing-inline-end: calc(
+    var(--vf-landing-inset-x) * 0.56 + env(safe-area-inset-right, 0px)
+  );
+  /* Sans caps micro (SS26, vertical rail) + on-dark footer copy */
+  --vf-landing-micro-fg: rgba(255, 255, 255, 0.52);
+}

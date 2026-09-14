@@ -1,0 +1,46 @@
+/**
+ * Brand primitives — override per theme in styles/themes/*.css
+ */
+:root,
+[data-theme='default'] {
+  --vf-bg-0: 244 241 236;
+  --vf-bg-1: 251 249 245;
+  --vf-surface-1: 255 255 255;
+  --vf-surface-2: 247 244 239;
+  --vf-rail: 248 245 241;
+  --vf-border-soft: 31 35 42;
+  --vf-border-strong: 188 160 116;
+  --vf-text-strong: 25 29 36;
+  --vf-text: 53 58 67;
+  --vf-text-muted: 113 118 126;
+  --vf-text-subtle: 146 151 158;
+  --vf-accent: 24 27 33;
+  --vf-accent-strong: 9 10 12;
+  --vf-accent-ink: 247 244 239;
+  --vf-danger: 178 86 86;
+  --vf-danger-bg: 253 243 243;
+  --vf-success: 102 160 130;
+  --vf-focus: 188 160 116;
+  --vf-overlay: 15 19 25;
+  --vf-surface-glow: radial-gradient(
+    circle at 50% 38%,
+    rgba(255, 255, 255, 0.45) 0%,
+    transparent 65%
+  );
+  --vf-shadow-soft: 0 8px 22px rgba(20, 24, 32, 0.08);
+  --vf-shadow-premium: 0 14px 34px rgba(20, 24, 32, 0.14);
+  --vf-radius-sm: 0.625rem;
+  --vf-radius-md: 0.875rem;
+  --vf-radius-lg: 1.25rem;
+  --fs-label: clamp(0.96rem, 0.42vw + 0.76rem, 1.22rem);
+  --fs-body: clamp(1.08rem, 0.52vw + 0.9rem, 1.38rem);
+  --fs-title-sm: clamp(1.35rem, 0.95vw + 0.98rem, 2rem);
+  --fs-title: clamp(1.9rem, 1.9vw + 1.15rem, 3.3rem);
+  --fs-hero: clamp(3rem, 6.5vw, 5.5rem);
+  --fs-hero-line: 0.92;
+  --touch-target: 2.75rem;
+  --vf-motion-fast: 0.18s;
+  --vf-motion-base: 0.38s;
+  --vf-motion-slow: 0.58s;
+  --vf-motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
