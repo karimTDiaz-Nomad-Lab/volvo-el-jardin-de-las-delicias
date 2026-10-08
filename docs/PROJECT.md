@@ -10,4 +10,4 @@ Photo booth MUPI Volvo en 3 fases.
    Una llamada a `/api/generate` con la foto + el prompt de la naturaleza elegida.
 
 Estado: `src/features/session/usePhotoBoothSession.ts`.  
-Claves Gemini solo en servidor. Aspecto de salida: 4:5.
+Claves Gemini solo en servidor. Aspecto de salida: 2:3 (4×6 Kodak).

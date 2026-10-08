@@ -39,9 +39,10 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                 <div className={styles.qrFrame}>
                   <QRCodeSVG
                     value={shareUrl}
-                    size={112}
-                    level="M"
-                    marginSize={1}
+                    size={280}
+                    level="L"
+                    boostLevel={false}
+                    marginSize={4}
                     bgColor="#ffffff"
                     fgColor="#111111"
                     title={copy.result.qrAria}

@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   buildCdnUrl,
   buildObjectKey,
+  buildShareId,
+  buildSharePageKey,
   parseDataUrl,
   readSpacesConfig,
   regionFromEndpoint,
@@ -53,6 +55,15 @@ describe('DigitalOcean Spaces portrait upload', () => {
     );
   });
 
+  it('builds a short QR page key beside the portrait prefix', () => {
+    expect(buildSharePageKey('volvo-jardin/portraits', 'a1b2c3d4e5')).toBe('volvo-jardin/q/a1b2c3d4e5');
+    expect(buildSharePageKey('portraits', 'abc')).toBe('portraits/q/abc');
+  });
+
+  it('builds a 10-character hex share id', () => {
+    expect(buildShareId()).toMatch(/^[0-9a-f]{10}$/);
+  });
+
   it('builds the CDN URL used by the QR', () => {
     expect(
       buildCdnUrl(
@@ -64,17 +75,36 @@ describe('DigitalOcean Spaces portrait upload', () => {
     );
   });
 
-  it('uploads and returns the public CDN URL', async () => {
+  it('uploads the 4×6 JPEG and a save page, then returns the HTML QR URL', async () => {
     const config = readSpacesConfig({
       DO_SPACES_KEY: 'key',
       DO_SPACES_SECRET: 'secret',
       DO_SPACES_BUCKET: 'no-madproject',
       DO_SPACES_ENDPOINT: 'https://ams3.digitaloceanspaces.com',
     });
-    const put = async () => undefined;
+    if (!config) throw new Error('expected Spaces config in test');
+    const puts: Array<{ key: string; contentType: string; body: Buffer }> = [];
+    const put = async (
+      _config: typeof config,
+      key: string,
+      body: Buffer,
+      contentType: string,
+    ) => {
+      puts.push({ key, contentType, body });
+    };
     const url = await uploadPortraitToSpaces(TINY_JPEG, config, put);
+    expect(puts).toHaveLength(2);
+    expect(puts[0]?.key).toMatch(/volvo-jardin\/portraits\/\d{4}-\d{2}-\d{2}\/[0-9a-f]{10}\.jpg$/);
+    expect(puts[0]?.contentType).toBe('image/jpeg');
+    expect(puts[1]?.key).toMatch(/^volvo-jardin\/q\/[0-9a-f]{10}$/);
+    expect(puts[1]?.contentType).toBe('text/html; charset=utf-8');
+    expect(puts[1]?.body.toString('utf8')).toContain('.jpg');
+    expect(puts[1]?.body.toString('utf8')).toContain('Guardar en galería');
     expect(url).toMatch(
-      /^https:\/\/no-madproject\.ams3\.cdn\.digitaloceanspaces\.com\/volvo-jardin\/portraits\/\d{4}-\d{2}-\d{2}\/[0-9a-f-]+\.jpg$/,
+      /^https:\/\/no-madproject\.ams3\.cdn\.digitaloceanspaces\.com\/volvo-jardin\/q\/[0-9a-f]{10}$/,
     );
+    const jpgId = puts[0]?.key.match(/([0-9a-f]{10})\.jpg$/)?.[1];
+    const htmlId = puts[1]?.key.match(/\/q\/([0-9a-f]{10})$/)?.[1];
+    expect(htmlId).toBe(jpgId);
   });
 });

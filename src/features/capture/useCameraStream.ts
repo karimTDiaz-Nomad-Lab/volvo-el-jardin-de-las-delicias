@@ -13,6 +13,22 @@ import {
 
 export type CameraStreamStatus = 'idle' | 'loading' | 'ready' | 'error';
 
+/** Max wait (ms) before treating the camera request as hung. */
+const CAMERA_TIMEOUT_MS = 20_000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new DOMException(`${label}: timed out after ${ms / 1000}s`, 'TimeoutError')),
+      ms,
+    );
+    promise.then(
+      (v) => { clearTimeout(timer); resolve(v); },
+      (e) => { clearTimeout(timer); reject(e); },
+    );
+  });
+}
+
 export function useCameraStream() {
   const streamRef = useRef<MediaStream | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -41,7 +57,11 @@ export function useCameraStream() {
     setError(null);
 
     try {
-      const mediaStream = await requestCameraStream();
+      const mediaStream = await withTimeout(
+        requestCameraStream(),
+        CAMERA_TIMEOUT_MS,
+        'Camera access',
+      );
       streamRef.current = mediaStream;
       setStream(mediaStream);
       setStatus('ready');

@@ -4,7 +4,7 @@ const copy: PlatformCopy = {
   brand: {
     collection: 'NATURE COLLECTION',
     cardEyebrow: 'EN NUESTRA NATURALEZA',
-    cardFooter: 'UNA DE CINCO NATURALEZAS VOLVO',
+    cardFooter: 'UNA DE CINCO\nNATURALEZAS VOLVO',
   },
   landing: {
     title: 'Elige\ntu naturaleza',
@@ -37,14 +37,14 @@ const copy: PlatformCopy = {
     titleError: 'No pudimos transformar esta foto',
     subtitle:
       'Adaptando luz, gesto, paisaje y composición. Tu naturaleza estará lista en unos segundos.',
-    printing: 'IMPRIMIENDO IMAGEN',
+    printing: 'GENERANDO RETRATO',
     retryLabel: 'Reintentar',
   },
   result: {
     againLabel: 'FINALIZAR',
     recaptureLabel: 'REPETIR',
-    qrHint: 'ESCANEA EL QR\nY COMPARTE TU FOTO',
-    qrAria: 'Código QR para compartir tu foto',
+    qrHint: 'ESCANEA EL QR\nY GUARDA TU FOTO',
+    qrAria: 'Código QR para guardar tu foto en la galería',
   },
   captureQuality: {
     darkWarn: 'La foto se ve muy oscura. Acércate a la luz o repite.',

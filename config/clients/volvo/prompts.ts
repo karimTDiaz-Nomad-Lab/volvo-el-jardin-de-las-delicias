@@ -11,7 +11,7 @@ export const RESPONSABLE_PROMPT = withLookAccuracy(
   'RESPONSABLE',
   `Generate exactly ONE single photographic image.
 
-Create a vertical 4:5 premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
+Create a vertical 2:3 (4×6) premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
 
 Use the attached webcam photograph as the reference for the real person or people.
 
@@ -262,7 +262,7 @@ export const EFICIENTE_PROMPT = withLookAccuracy(
   'EFICIENTE',
   `Generate exactly ONE single photographic image.
 
-Create a vertical 4:5 premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
+Create a vertical 2:3 (4×6) premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
 
 Use the attached webcam photograph as the reference for the real person or people.
 
@@ -719,7 +719,7 @@ export const CUIDADOSA_PROMPT = withLookAccuracy(
   'CUIDADOSA',
   `Generate exactly ONE single photographic image.
 
-Create a vertical 4:5 premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
+Create a vertical 2:3 (4×6) premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
 
 Use the attached webcam photograph as the reference for the real person or people.
 
@@ -1177,7 +1177,7 @@ export const RESPETUOSA_PROMPT = withLookAccuracy(
   'RESPETUOSA',
   `Generate exactly ONE single photographic image.
 
-Create a vertical 4:5 premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
+Create a vertical 2:3 (4×6) premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
 
 Use the attached webcam photograph as the primary reference for the real person or people.
 
@@ -1930,7 +1930,7 @@ export const CONSCIENTE_PROMPT = withLookAccuracy(
   'CONSCIENTE',
   `Generate exactly ONE single photographic image.
 
-Create a vertical 4:5 premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
+Create a vertical 2:3 (4×6) premium lifestyle editorial photograph inspired by the restrained, human and sophisticated visual language of a contemporary Volvo campaign.
 
 Use the attached webcam photograph as the primary reference for the real person or people.
 

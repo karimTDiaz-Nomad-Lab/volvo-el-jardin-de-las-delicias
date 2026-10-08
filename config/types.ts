@@ -27,7 +27,7 @@ export interface NatureTheme {
   thumbSrc: string;
   prompt: string;
   styleRefs: NatureStyleRefs;
-  /** Overlay copy on the finished 4:5 portrait. */
+  /** Overlay copy on the finished 4×6 portrait. */
   overlayInk: 'black' | 'white';
 }
 

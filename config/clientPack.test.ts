@@ -41,5 +41,6 @@ describe('client pack isolation', () => {
     expect(manifest.brand.selectBackgroundSrc).toBe('/ui/fondo_journey.png');
     expect(manifest.brand.logoSrc).toBe('/ui/volvo_logo_negro.svg?v=3');
     expect(manifest.brand.logoOnDarkSrc).toBe('/ui/volvo_logo_blanco.svg');
+    expect(manifest.copy.brand.cardFooter).toBe('UNA DE CINCO\nNATURALEZAS VOLVO');
   });
 });

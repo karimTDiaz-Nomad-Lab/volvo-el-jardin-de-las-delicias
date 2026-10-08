@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly VITE_SUBJECT_HEIGHT_TARGET?: string;
   readonly VITE_SUBJECT_TOP_MARGIN_TARGET?: string;
   readonly VITE_CAMERA_ROTATION_DEG?: string;
+  readonly VITE_CAMERA_DEVICE_LABEL?: string;
   readonly VITE_KIOSK_API_KEY?: string;
 }
 

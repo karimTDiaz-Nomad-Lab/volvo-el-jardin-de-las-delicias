@@ -14,13 +14,13 @@ describe('sharePortrait', () => {
         ok: true,
         json: async () => ({
           shareUrl:
-            'https://no-madproject.ams3.cdn.digitaloceanspaces.com/volvo-jardin/portraits/a.jpg',
+            'https://no-madproject.ams3.cdn.digitaloceanspaces.com/volvo-jardin/portraits/a.html',
         }),
       }),
     );
 
     await expect(sharePortrait('data:image/jpeg;base64,abc')).resolves.toBe(
-      'https://no-madproject.ams3.cdn.digitaloceanspaces.com/volvo-jardin/portraits/a.jpg',
+      'https://no-madproject.ams3.cdn.digitaloceanspaces.com/volvo-jardin/portraits/a.html',
     );
   });
 

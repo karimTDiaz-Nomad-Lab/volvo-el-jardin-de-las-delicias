@@ -16,7 +16,7 @@ import {
 
 function resolveFrameAspectRatio(): string {
   const raw = process.env.VITE_FRAME_ASPECT_RATIO?.trim();
-  let ratio = 4 / 5;
+  let ratio = 2 / 3;
   if (raw) {
     if (raw.includes(':') || raw.includes('/')) {
       const sep = raw.includes(':') ? ':' : '/';
@@ -27,11 +27,11 @@ function resolveFrameAspectRatio(): string {
       if (Number.isFinite(parsed) && parsed > 0) ratio = parsed;
     }
   }
+  if (Math.abs(ratio - 2 / 3) < 0.01) return '2:3';
   if (Math.abs(ratio - 4 / 5) < 0.01) return '4:5';
   if (Math.abs(ratio - 3 / 4) < 0.01) return '3:4';
   if (Math.abs(ratio - 9 / 16) < 0.01) return '9:16';
-  if (Math.abs(ratio - 2 / 3) < 0.01) return '2:3';
-  return '4:5';
+  return '2:3';
 }
 
 // Default flash-lite for interactive latency (QW7). Override via GEMINI_IMAGE_MODEL.

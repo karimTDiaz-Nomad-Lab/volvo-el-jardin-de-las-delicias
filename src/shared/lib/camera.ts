@@ -26,23 +26,48 @@ export function getCameraDeviceLabelHint(): string {
   return import.meta.env.VITE_CAMERA_DEVICE_LABEL?.trim() ?? '';
 }
 
+function isVirtualOrTetheredWebcam(label: string): boolean {
+  return /(eos webcam utility|canon eos|\beos\b|elgato|obs virtual|iriun|epoccam)/i.test(
+    label,
+  );
+}
+
+function isBuiltinWebcam(label: string): boolean {
+  if (isVirtualOrTetheredWebcam(label)) return false;
+  return /(integrated|internal|built-?in|facetime|laptop)/i.test(label);
+}
+
 export function pickVideoDeviceId(
   devices: Array<Pick<MediaDeviceInfo, 'kind' | 'deviceId' | 'label'>>,
   hint: string,
 ): string | undefined {
+  const videos = devices.filter((device) => device.kind === 'videoinput' && device.deviceId);
+  if (videos.length === 0) return undefined;
+
   const needle = hint.trim().toLowerCase();
-  if (!needle) return undefined;
-  return devices.find(
-    (device) =>
-      device.kind === 'videoinput' && device.label.toLowerCase().includes(needle),
-  )?.deviceId;
+  if (needle) {
+    const hinted = videos.find(
+      (device) =>
+        device.label.toLowerCase().includes(needle) ||
+        device.deviceId.toLowerCase().includes(needle),
+    );
+    if (hinted) return hinted.deviceId;
+  }
+
+  const builtin = videos.find((device) => isBuiltinWebcam(device.label));
+  if (builtin) return builtin.deviceId;
+
+  const notTethered = videos.find((device) => !isVirtualOrTetheredWebcam(device.label));
+  if (notTethered) return notTethered.deviceId;
+
+  return videos[0]?.deviceId;
 }
 
 export function videoConstraintsForDevice(deviceId?: string): MediaTrackConstraints {
   if (!deviceId) return { ...CAMERA_VIDEO_CONSTRAINTS };
   return {
     ...CAMERA_VIDEO_CONSTRAINTS,
-    deviceId: { exact: deviceId },
+    deviceId: { ideal: deviceId },
   };
 }
 
@@ -115,6 +140,29 @@ export function parseUserMediaError(err: string | DOMException | unknown): Camer
   }
 
   if (
+    name === 'NotFoundError' ||
+    name === 'DevicesNotFoundError' ||
+    name === 'OverconstrainedError' ||
+    combined.includes('requested device not found')
+  ) {
+    return {
+      kind: 'unavailable',
+      message: 'No camera was found. Connect a camera and tap Try again.',
+    };
+  }
+
+  if (
+    name === 'NotReadableError' ||
+    name === 'TrackStartError' ||
+    combined.includes('could not start video source')
+  ) {
+    return {
+      kind: 'generic',
+      message: 'The camera is already in use by another app. Close it and tap Try again.',
+    };
+  }
+
+  if (
     name === 'NotAllowedError' ||
     name === 'PermissionDeniedError' ||
     combined.includes('permission') ||
@@ -124,11 +172,27 @@ export function parseUserMediaError(err: string | DOMException | unknown): Camer
     return { kind: 'permission', message: getPermissionMessage() };
   }
 
-  return { kind: 'generic', message: getPermissionMessage() };
+  return {
+    kind: 'generic',
+    message: 'Could not open a camera. Check that one is connected and tap Try again.',
+  };
 }
 
 export function getUnavailableCameraError(): CameraError {
   return { kind: 'unavailable', message: getUnavailableMessage() };
+}
+
+const VIDEO_CONSTRAINT_FALLBACKS: Array<boolean | MediaTrackConstraints> = [
+  { facingMode: { ideal: 'user' } },
+  true,
+  CAMERA_VIDEO_CONSTRAINTS,
+  { width: { ideal: 1280 }, height: { ideal: 720 } },
+];
+
+async function openVideoStream(
+  video: boolean | MediaTrackConstraints,
+): Promise<MediaStream> {
+  return navigator.mediaDevices.getUserMedia({ video, audio: false });
 }
 
 export async function requestCameraStream(): Promise<MediaStream> {
@@ -136,24 +200,42 @@ export async function requestCameraStream(): Promise<MediaStream> {
     throw getUnavailableCameraError();
   }
 
-  const hint = getCameraDeviceLabelHint();
-  const bootstrap = await navigator.mediaDevices.getUserMedia({
-    video: CAMERA_VIDEO_CONSTRAINTS,
-    audio: false,
-  });
+  let lastError: unknown;
+  let stream: MediaStream | null = null;
 
-  if (!hint) return bootstrap;
+  for (const video of VIDEO_CONSTRAINT_FALLBACKS) {
+    try {
+      stream = await openVideoStream(video);
+      break;
+    } catch (err) {
+      lastError = err;
+    }
+  }
 
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  const deviceId = pickVideoDeviceId(devices, hint);
-  const currentId = bootstrap.getVideoTracks()[0]?.getSettings().deviceId;
-  if (!deviceId || deviceId === currentId) return bootstrap;
+  if (!stream) {
+    throw parseUserMediaError(lastError);
+  }
 
-  stopCameraStream(bootstrap);
-  return navigator.mediaDevices.getUserMedia({
-    video: videoConstraintsForDevice(deviceId),
-    audio: false,
-  });
+  let devices: MediaDeviceInfo[] = [];
+  try {
+    devices = await navigator.mediaDevices.enumerateDevices();
+  } catch {
+    return stream;
+  }
+
+  const preferredId = pickVideoDeviceId(devices, getCameraDeviceLabelHint());
+  const currentId = stream.getVideoTracks()[0]?.getSettings().deviceId;
+  if (!preferredId || preferredId === currentId) {
+    return stream;
+  }
+
+  try {
+    const next = await openVideoStream(videoConstraintsForDevice(preferredId));
+    stopCameraStream(stream);
+    return next;
+  } catch {
+    return stream;
+  }
 }
 
 export function stopCameraStream(stream: MediaStream | null | undefined): void {

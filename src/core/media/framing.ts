@@ -4,7 +4,7 @@
  * across compose iterations instead of re-inferring from each Gemini output.
  */
 
-const DEFAULT_FRAME_ASPECT_RATIO = 4 / 5; // Volvo editorial portrait (width / height).
+const DEFAULT_FRAME_ASPECT_RATIO = 2 / 3; // Kodak Dock Retro 4×6 portrait (width / height).
 /**
  * Subject occupancy targets are PROMPT parameters: they feed
  * buildLockedFramingPromptSuffix so Gemini renders the person at ~60% of the
@@ -13,8 +13,8 @@ const DEFAULT_FRAME_ASPECT_RATIO = 4 / 5; // Volvo editorial portrait (width / h
  */
 const DEFAULT_SUBJECT_HEIGHT_TARGET = 0.6;
 const DEFAULT_SUBJECT_TOP_MARGIN_TARGET = 0.1;
-const DEFAULT_MAX_OUTPUT_WIDTH = 1536;
-const DEFAULT_MAX_OUTPUT_HEIGHT = 2048;
+const DEFAULT_MAX_OUTPUT_WIDTH = 1600;
+const DEFAULT_MAX_OUTPUT_HEIGHT = 2400;
 const DEFAULT_JPEG_QUALITY = 0.9;
 const DEFAULT_BACKGROUND_COLOR = '#f5f5f7';
 const EPSILON = 0.0001;
@@ -125,11 +125,11 @@ export const SUBJECT_TOP_MARGIN_TARGET = parsePositiveNumber(
  */
 export const GEMINI_FRAME_ASPECT_RATIO = (() => {
   const ratio = FRAME_ASPECT_RATIO;
+  if (Math.abs(ratio - 2 / 3) < 0.01) return '2:3';
   if (Math.abs(ratio - 4 / 5) < 0.01) return '4:5';
   if (Math.abs(ratio - 3 / 4) < 0.01) return '3:4';
   if (Math.abs(ratio - 9 / 16) < 0.01) return '9:16';
-  if (Math.abs(ratio - 2 / 3) < 0.01) return '2:3';
-  return '4:5';
+  return '2:3';
 })();
 
 export interface FramingOptions {
@@ -442,7 +442,7 @@ export const FRAMED_IMAGE_SIZE = (() => {
  * 1280 (not 1024): on a full-body 3:4 shot the face spans few pixels, and
  * gemini editing rounds compound any input softness into visible face blur.
  * 1280 long side gives the face ~25% more linear resolution while the payload
- * stays ~60% smaller than the full 1536x2048 session canvas.
+ * stays ~60% smaller than the full 1600x2400 session canvas.
  */
 const TRANSPORT_MAX_DIMENSION = 1280;
 const TRANSPORT_JPEG_QUALITY = 0.85;

@@ -1,20 +1,24 @@
+import { CARD_PRINT_INCHES } from './compose-nature-card';
+
 /**
- * Prints the baked 4:5 Nature Collection card (portrait + overlay).
+ * Prints the baked Nature Collection card (portrait + overlay).
  *
  * Opens a hidden iframe with the image full-bleed, zero page margins, and
- * `@page { size: 4in 5in }` to match 4×5 printer media, then calls
- * `window.print()` on that document. Does not print the kiosk UI.
+ * `@page { size: 4in 6in }` to match Kodak Dock Plus Retro (PD460) media,
+ * then calls `window.print()` on that document. Does not print the kiosk UI.
  *
  * Silent printing requires the host Chrome/Edge kiosk flag `--kiosk-printing`
- * and a default printer loaded with 4×5 media. Otherwise the browser print
+ * and a default printer loaded with 4×6 media. Otherwise the browser print
  * dialog is shown. The iframe is removed as soon as print() returns; that
  * does not wait for the physical job to finish.
  *
- * @param imageUrl - Data URL of the composed 4:5 JPEG (1600×2000).
+ * @param imageUrl - Data URL of the composed 2:3 JPEG (1600×2400).
  * @returns Resolves after print() is invoked (or immediately if the image
  *   was already loaded). Rejects if the iframe document or `<img>` cannot
  *   be created.
  */
+
+const PRINT_PAGE = `${CARD_PRINT_INCHES.width}in ${CARD_PRINT_INCHES.height}in`;
 
 export function printImage(imageUrl: string): Promise<void> {
   // In dev mode, open the composed card in a new tab for visual inspection.
@@ -24,7 +28,7 @@ export function printImage(imageUrl: string): Promise<void> {
       win.document.write(`<!doctype html>
   <html>
     <head>
-      <title>Print preview — 4×5 card</title>
+      <title>Print preview — 4×6 Kodak card</title>
       <style>
         html, body {
           margin: 0;
@@ -68,11 +72,11 @@ export function printImage(imageUrl: string): Promise<void> {
   <html>
     <head>
       <style>
-        @page { size: 4in 5in; margin: 0; }
+        @page { size: ${PRINT_PAGE}; margin: 0; }
         html, body {
           margin: 0;
-          width: 4in;
-          height: 5in;
+          width: ${CARD_PRINT_INCHES.width}in;
+          height: ${CARD_PRINT_INCHES.height}in;
           background: #000;
         }
         img {

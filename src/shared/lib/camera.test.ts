@@ -32,13 +32,28 @@ describe('pickVideoDeviceId', () => {
     { kind: 'videoinput' as const, deviceId: 'canon', label: 'EOS Webcam Utility' },
   ];
 
-  it('picks a camera whose label matches the hint', () => {
+  it('picks a camera whose label or id matches the hint', () => {
     expect(pickVideoDeviceId(devices, 'canon')).toBe('canon');
     expect(pickVideoDeviceId(devices, 'EOS')).toBe('canon');
   });
 
-  it('returns undefined without a hint or match', () => {
-    expect(pickVideoDeviceId(devices, '')).toBeUndefined();
-    expect(pickVideoDeviceId(devices, 'logitech')).toBeUndefined();
+  it('prefers the laptop webcam over Canon EOS Webcam Utility', () => {
+    expect(pickVideoDeviceId(devices, '')).toBe('laptop');
+    expect(pickVideoDeviceId(devices, 'logitech')).toBe('laptop');
+  });
+
+  it('uses the only video camera when nothing else is plugged in', () => {
+    expect(
+      pickVideoDeviceId(
+        [{ kind: 'videoinput', deviceId: 'laptop', label: 'Integrated Camera' }],
+        '',
+      ),
+    ).toBe('laptop');
+  });
+
+  it('returns undefined when there is no video camera', () => {
+    expect(
+      pickVideoDeviceId([{ kind: 'audioinput', deviceId: 'mic', label: 'Mic' }], ''),
+    ).toBeUndefined();
   });
 });

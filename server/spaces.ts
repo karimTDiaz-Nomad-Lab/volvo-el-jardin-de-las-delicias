@@ -3,7 +3,8 @@
  * Credentials stay on the server. Objects are public so a phone can open the QR URL.
  */
 import { PutObjectCommand, S3Client, type ObjectCannedACL } from '@aws-sdk/client-s3';
-import { randomUUID } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
+import { SHARE_DOWNLOAD_FILENAME, buildShareSavePage } from './share-page';
 
 export type SpacesConfig = {
   bucket: string;
@@ -74,22 +75,44 @@ export function parseDataUrl(dataUrl: string): {
 export function buildObjectKey(
   prefix: string,
   extension: string,
-  id: string = randomUUID(),
+  id: string = buildShareId(),
   now: Date = new Date(),
 ): string {
   const date = now.toISOString().slice(0, 10);
   return `${prefix}/${date}/${id}.${extension}`;
 }
 
+/** 10 hex chars — enough uniqueness for booth sessions, short enough for a sparse QR. */
+export function buildShareId(): string {
+  return randomBytes(5).toString('hex');
+}
+
+/**
+ * HTML landing page lives next to portraits, not under the dated JPEG folder,
+ * so the QR URL stays short: `{cdn}/{parent}/q/{id}`.
+ */
+export function buildSharePageKey(portraitPrefix: string, id: string): string {
+  const trimmed = portraitPrefix.replace(/\/+$/, '');
+  const slash = trimmed.lastIndexOf('/');
+  const parent = slash === -1 ? trimmed : trimmed.slice(0, slash);
+  return `${parent}/q/${id}`;
+}
+
 export function buildCdnUrl(cdnBase: string, key: string): string {
   return `${cdnBase.replace(/\/+$/, '')}/${key.replace(/^\/+/, '')}`;
 }
+
+export type PutPortraitHeaders = {
+  contentDisposition?: string;
+  cacheControl?: string;
+};
 
 export type PutPortrait = (
   config: SpacesConfig,
   key: string,
   body: Buffer,
   contentType: string,
+  headers?: PutPortraitHeaders,
 ) => Promise<void>;
 
 function createClient(config: SpacesConfig): S3Client {
@@ -106,7 +129,13 @@ function createClient(config: SpacesConfig): S3Client {
   });
 }
 
-export const putPortraitObject: PutPortrait = async (config, key, body, contentType) => {
+export const putPortraitObject: PutPortrait = async (
+  config,
+  key,
+  body,
+  contentType,
+  headers = {},
+) => {
   const client = createClient(config);
   try {
     await client.send(
@@ -116,8 +145,8 @@ export const putPortraitObject: PutPortrait = async (config, key, body, contentT
         Body: body,
         ACL: 'public-read' as ObjectCannedACL,
         ContentType: contentType,
-        CacheControl: 'public, max-age=604800',
-        ContentDisposition: 'inline',
+        CacheControl: headers.cacheControl ?? 'public, max-age=604800',
+        ContentDisposition: headers.contentDisposition ?? 'inline',
       }),
     );
   } finally {
@@ -134,7 +163,20 @@ export async function uploadPortraitToSpaces(
     throw new Error('DigitalOcean Spaces is not configured');
   }
   const { buffer, contentType, extension } = parseDataUrl(dataUrl);
-  const key = buildObjectKey(config.prefix, extension);
-  await put(config, key, buffer, contentType);
-  return buildCdnUrl(config.cdnBase, key);
+  const id = buildShareId();
+  const imageKey = buildObjectKey(config.prefix, extension, id);
+  const pageKey = buildSharePageKey(config.prefix, id);
+  const imageUrl = buildCdnUrl(config.cdnBase, imageKey);
+  const page = buildShareSavePage({
+    imageUrl,
+    filename: SHARE_DOWNLOAD_FILENAME,
+  });
+
+  await put(config, imageKey, buffer, contentType, {
+    contentDisposition: `inline; filename="${SHARE_DOWNLOAD_FILENAME}"`,
+  });
+  await put(config, pageKey, Buffer.from(page, 'utf8'), 'text/html; charset=utf-8', {
+    contentDisposition: 'inline',
+  });
+  return buildCdnUrl(config.cdnBase, pageKey);
 }

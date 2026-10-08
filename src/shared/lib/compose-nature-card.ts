@@ -1,13 +1,15 @@
 /**
- * Bake the 4:5 Nature Collection card (portrait + Volvo overlay) into a JPEG.
- * Print and QR both use this file so the physical print matches the download.
+ * Bake the Nature Collection card (portrait + Volvo overlay) into a JPEG.
+ * Print, Spaces, and QR all use this file so the physical print matches the download.
  *
- * Output is 1600×2000 (4:5) — 400 dpi on 4×5 in paper.
+ * Output is 1600×2400 (2:3) — 400 dpi on Kodak Dock Plus Retro 4×6 in paper
+ * (native print is 300 dpi / 1200×1800; the extra pixels downscale cleanly).
  */
 
 export const CARD_PRINT_WIDTH = 1600;
-export const CARD_PRINT_HEIGHT = 2000;
+export const CARD_PRINT_HEIGHT = 2400;
 export const CARD_PRINT_ASPECT = CARD_PRINT_WIDTH / CARD_PRINT_HEIGHT;
+export const CARD_PRINT_INCHES = { width: 4, height: 6 } as const;
 
 /** Logo SVG viewBox 524.06 × 45.51 */
 const LOGO_ASPECT = 524.06 / 45.51;
@@ -52,10 +54,11 @@ export function getNatureCardLayout(
     logoHeight,
     logoX: width - padX - logoWidth,
     logoY: padTop,
-    eyebrowSize: width * 0.0132,
+    // Pixel sizes on the 1600×2400 print canvas (not ResultScreen CSS).
+    eyebrowSize: width * 0.017,
     nameSize: width * 0.05,
     taglineSize: width * 0.02,
-    footerSize: width * 0.012,
+    footerSize: width * 0.026,
     taglineMaxWidth: width * 0.7,
   };
 }
@@ -131,7 +134,10 @@ function fillRightSpaced(
   }
 }
 
-function canvasToJpeg(canvas: HTMLCanvasElement, quality: number): Promise<string> {
+function canvasToJpeg(
+  canvas: HTMLCanvasElement,
+  quality: number,
+): Promise<string> {
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
@@ -142,12 +148,17 @@ function canvasToJpeg(canvas: HTMLCanvasElement, quality: number): Promise<strin
         const reader = new FileReader();
         reader.onloadend = () => {
           if (typeof reader.result !== 'string') {
-            reject(new Error('Unexpected FileReader result after composing the card.'));
+            reject(
+              new Error(
+                'Unexpected FileReader result after composing the card.',
+              ),
+            );
             return;
           }
           resolve(reader.result);
         };
-        reader.onerror = () => reject(new Error('FileReader failed after composing the card.'));
+        reader.onerror = () =>
+          reject(new Error('FileReader failed after composing the card.'));
         reader.readAsDataURL(blob);
       },
       'image/jpeg',
@@ -156,7 +167,9 @@ function canvasToJpeg(canvas: HTMLCanvasElement, quality: number): Promise<strin
   });
 }
 
-export async function composeNatureCard(input: ComposeNatureCardInput): Promise<string> {
+export async function composeNatureCard(
+  input: ComposeNatureCardInput,
+): Promise<string> {
   await waitForOverlayFonts();
   const [portrait, logo] = await Promise.all([
     loadImage(input.portraitUrl),
@@ -183,7 +196,13 @@ export async function composeNatureCard(input: ComposeNatureCardInput): Promise<
   if (input.overlayInk === 'white') {
     ctx.filter = 'invert(1)';
   }
-  ctx.drawImage(logo, layout.logoX, layout.logoY, layout.logoWidth, layout.logoHeight);
+  ctx.drawImage(
+    logo,
+    layout.logoX,
+    layout.logoY,
+    layout.logoWidth,
+    layout.logoHeight,
+  );
   ctx.restore();
 
   let y = layout.logoY + layout.logoHeight + layout.height * 0.008;
@@ -206,10 +225,30 @@ export async function composeNatureCard(input: ComposeNatureCardInput): Promise<
     y += lineHeight;
   }
 
-  const footer = input.footer.toUpperCase();
+  // Footer stays white on every nature so it reads on both light and dark plates.
+  ctx.fillStyle = '#ffffff';
   ctx.font = `400 ${layout.footerSize}px ${FONT}`;
-  const footerY = layout.height - layout.padBottom - layout.footerSize;
-  fillRightSpaced(ctx, footer, layout.rightX, footerY, layout.footerSize * 0.12);
+  const footerLines = input.footer
+    .toUpperCase()
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const footerLineHeight = layout.footerSize * 1.25;
+  const footerBlockHeight =
+    footerLines.length === 0
+      ? 0
+      : layout.footerSize + footerLineHeight * (footerLines.length - 1);
+  let footerY = layout.height - layout.padBottom - footerBlockHeight;
+  for (const line of footerLines) {
+    fillRightSpaced(
+      ctx,
+      line,
+      layout.rightX,
+      footerY,
+      layout.footerSize * 0.12,
+    );
+    footerY += footerLineHeight;
+  }
 
   return canvasToJpeg(canvas, 0.92);
 }

@@ -177,7 +177,7 @@
   color: var(--vf-ink, #1a1a16);
 }
 
-/* Fills the band between the title and the confirm footer, then centers the 4:5 frame. */
+/* Fills the band between the title and the confirm footer, then centers the 2:3 frame. */
 .previewStage {
   flex: 1;
   min-height: 0;
@@ -188,9 +188,9 @@
 }
 
 .previewFrame {
-  aspect-ratio: 4 / 5;
-  width: min(100cqw, calc(86cqh * 4 / 5));
-  height: min(86cqh, calc(100cqw * 5 / 4));
+  aspect-ratio: 2 / 3;
+  width: min(100cqw, calc(86cqh * 2 / 3));
+  height: min(86cqh, calc(100cqw * 3 / 2));
   max-width: 44rem;
   border-radius: 1.65rem;
   overflow: hidden;

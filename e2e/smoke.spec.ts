@@ -40,7 +40,7 @@ async function mockGenerateApi(page: import('@playwright/test').Page) {
       contentType: 'application/json',
       body: JSON.stringify({
         shareUrl:
-          'https://no-madproject.ams3.cdn.digitaloceanspaces.com/volvo-jardin/portraits/e2e.jpg',
+          'https://no-madproject.ams3.cdn.digitaloceanspaces.com/volvo-jardin/portraits/e2e.html',
       }),
     });
   });

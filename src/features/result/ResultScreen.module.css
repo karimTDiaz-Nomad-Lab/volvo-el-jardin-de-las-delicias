@@ -8,16 +8,16 @@
   width: 100%;
   display: grid;
   place-items: start center;
-  padding: 5% 7%;
+  /*  padding: 5% 7%; */
   container-type: size;
 }
 
 .card {
   position: relative;
-  aspect-ratio: 4 / 5;
-  height: min(92cqh, calc(100cqw * 5 / 4));
-  width: min(100cqw, calc(92cqh * 4 / 5));
-  max-width: 48rem;
+  aspect-ratio: 2 / 3;
+  height: min(98cqh, calc(100cqw * 3 / 2));
+  width: min(100cqw, calc(98cqh * 2 / 3));
+  max-width: 55rem;
   overflow: hidden;
   border-radius: 1.35rem;
   border: 1px solid rgba(255, 255, 255, 0.88);
@@ -68,7 +68,7 @@
 
 .eyebrow {
   margin: 0;
-  font-size: clamp(0.63rem, 1.32cqw, 0.83rem);
+  font-size: clamp(0.75rem, 2cqw, 1.2rem);
   font-weight: 400;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -95,19 +95,23 @@
 
 .footerNote {
   margin-top: auto;
-  font-size: clamp(0.55rem, 1.2cqw, 0.72rem);
+  color: #fff;
+  font-size: clamp(0.78rem, 1.75cqw, 1.05rem);
   font-weight: 400;
   letter-spacing: 0.12em;
+  line-height: 1.25;
   text-transform: uppercase;
+  white-space: pre-line;
 }
 
 .qrBlock {
+  width: min(90%, 52rem) !important;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: max(3.65rem, var(--vf-touch-target-min, 44px));
-  padding: 0.7rem 1.4rem;
-  border-radius: 30px;
+  padding: 0.85rem 1.25rem;
+  border-radius: 1.65rem;
   border: 1px solid var(--vf-pill-stroke, #a3863a);
   background-color: var(--vf-pill-fill, #24291d);
   color: #fff;
@@ -117,16 +121,16 @@
 .qrRow {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  gap: 1.35rem;
   width: 100%;
 }
 
 .qrFrame {
   flex-shrink: 0;
-  width: 10rem;
+  width: min(22rem, 46%);
   background: #fff;
-  padding: 0.28rem;
-  border-radius: 0.55rem;
+  padding: 0.3rem;
+  border-radius: 0.85rem;
 }
 
 .qrFrame svg {
